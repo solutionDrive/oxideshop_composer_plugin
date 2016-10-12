@@ -1,0 +1,8 @@
+###################
+#### Gitignore ####
+###################
+
+### Composer template
+composer.phar
+/vendor/
+/bin/
