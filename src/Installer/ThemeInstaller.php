@@ -30,7 +30,7 @@ use Composer\Package\PackageInterface;
 class ThemeInstaller extends AbstractInstaller
 {
     const METADATA_FILE_NAME = 'theme.php';
-    const PATH_TO_THEMES = "Application/views";
+    const PATH_TO_THEMES = "application/views";
 
     /**
      * @return bool
@@ -48,6 +48,7 @@ class ThemeInstaller extends AbstractInstaller
     public function install($packagePath)
     {
         $package = $this->getPackage();
+        
         $this->getIO()->write("Installing {$package->getName()} package");
 
         $iterator = $this->getDirectoriesToSkipIteratorBuilder()
@@ -92,10 +93,17 @@ class ThemeInstaller extends AbstractInstaller
             $fileSystem->mirror($source, $target);
         }
     }
-
+    
     /**
+     * Forms the Theme directory name,
+     * specially from the composer.json of vendor/theme
+     *
+     * If not defined in vendor/theme this will return the specific package name
+     * example return value: "name": "company_name/__the_specific_package_name__"
+     *
      * @param $package
-     * @return mixed
+     *
+     * @return string
      */
     protected function formThemeDirectoryName($package)
     {
@@ -105,9 +113,12 @@ class ThemeInstaller extends AbstractInstaller
         }
         return $themePath;
     }
-
+    
     /**
-     * @return null|string
+     * Builds the Path for specific asset folder,
+     * specially from the composer.json of vender/theme
+     *
+     * @return string
      */
     protected function formAssetsDirectoryName()
     {
