@@ -2,7 +2,6 @@ OXID eShop composer plugin
 ==========================
 
 This plugin is used to install OXID eShop and OXID eShop third party integrations (modules, themes).
-
 More information how to install OXID eShop using this plugin can be found `here <http://oxid-eshop-developer-documentation.readthedocs.io/en/latest/getting_started/eshop_installation.html#eshop-installation-via-composer>`__.
 
 Supported types
@@ -19,3 +18,19 @@ Available types are:
 More information how to create module installable via composer: http://oxid-eshop-developer-documentation.readthedocs.io/en/latest/modules/module_via_composer.html
 
 More information how to create themes installable via composer: http://oxid-eshop-developer-documentation.readthedocs.io/en/latest/themes/theme_via_composer.html
+
+Executing tests
+---------------
+
+Run all tests (only dev):
+ - $: bin/phpunit tests
+
+Changelog | Fork - solutionDrive GmbH
+-------------------------------------
+
+Description:
+We've forked this repository to work with themes over composer installer templates.
+
+- Changed ThemeInstaller::PATH_TO_THEMES value to 'application/views' to match old structure
+- Changed PackagesInstaller::getShopSourcePath() to PackagesInstaller::getShopRootPath() to work directly with /application and /out - folders
+    - Modified the tests for those changes
