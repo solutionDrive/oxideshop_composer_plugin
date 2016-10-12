@@ -19,6 +19,9 @@
     "mikey179/vfsStream": "^1.6",
     "composer/composer": "^1.0"
   },
+  "config": {
+    "bin-dir": "./bin/"
+  },
   "autoload": {
     "psr-4": {"OxidEsales\\ComposerPlugin\\": "src"}
   },
