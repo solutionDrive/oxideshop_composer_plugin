@@ -33,10 +33,11 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class PackagesInstallerTest extends \PHPUnit_Framework_TestCase
 {
+    
     /**
-     * The composer.json file already in source for 5.3.
+     * The composer.json file already in source for < 5.3.
      */
-    public function testGetShopSourcePathByConfiguration()
+    public function testGetShopRootPathByConfiguration()
     {
         $composerConfigMock = $this->getMock(Config::class);
         $composerMock = $this->getMock(Composer::class);
@@ -44,24 +45,23 @@ class PackagesInstallerTest extends \PHPUnit_Framework_TestCase
 
         $packageInstallerStub = new PackagesInstaller(new NullIO(), $composerMock);
         $packageInstallerStub->setSettings([
-            'source-path' => 'some/path/to/source'
+            'source-path' => 'some/path/to/root'
         ]);
-        $this->assertEquals($packageInstallerStub->getShopSourcePath(), 'some/path/to/source');
+        $this->assertEquals($packageInstallerStub->getShopRootPath(), 'some/path/to/root');
     }
 
     /**
-     * The composer.json file is taken up from the source directory for 6.0, so we should add source to path.
+     * The composer.json file is taken up from the root directory for version lower than 5.3, so we shouldn't add a source to our path.
      */
-    public function testGetShopSourcePathFor60()
+    public function testGetShopRootPathForLower53()
     {
         $composerConfigMock = $this->getMock(Config::class);
         $composerMock = $this->getMock(Composer::class);
         $composerMock->method('getConfig')->withAnyParameters()->willReturn($composerConfigMock);
 
         $packageInstallerStub = new PackagesInstaller(new NullIO(), $composerMock);
-        $result = $packageInstallerStub->getShopSourcePath();
+        $result = $packageInstallerStub->getShopRootPath();
 
-        $this->assertEquals($result, getcwd() . '/source');
+        $this->assertNotEquals($result, getcwd() . '/source');
     }
-
 }

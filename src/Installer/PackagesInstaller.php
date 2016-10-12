@@ -86,9 +86,9 @@ class PackagesInstaller extends LibraryInstaller
      *
      * @return string
      */
-    public function getShopSourcePath()
+    public function getShopRootPath()
     {
-        $shopSource = getcwd() . '/source';
+        $shopSource = getcwd();
 
         if (isset($this->settings[AbstractInstaller::EXTRA_PARAMETER_SOURCE_PATH])) {
             $shopSource = $this->settings[AbstractInstaller::EXTRA_PARAMETER_SOURCE_PATH];
@@ -105,6 +105,6 @@ class PackagesInstaller extends LibraryInstaller
      */
     protected function createInstaller(PackageInterface $package)
     {
-        return new $this->installers[$package->getType()](new Filesystem(), $this->io, $this->getShopSourcePath(), $package);
+        return new $this->installers[$package->getType()](new Filesystem(), $this->io, $this->getShopRootPath(), $package);
     }
 }
