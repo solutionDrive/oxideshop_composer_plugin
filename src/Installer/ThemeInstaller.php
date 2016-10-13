@@ -54,7 +54,7 @@ class ThemeInstaller extends AbstractInstaller
         $this->getIO()->write("Installing {$package->getPrettyName()} package");
         
         if ($this->isInstalled()) {
-            if ($this->getIO()->ask("<info>Override existing Theme ({$package->getPrettyName()})? [y, n]</info>", ' ?') == 'n') {
+            if ($this->getIO()->ask("<info>Override existing Theme ({$package->getPrettyName()})? [y, n (default: y)]</info>", ' ?') == 'n') {
                 $this->getIO()->write("- Overriding of package {$package->getPrettyName()} was successfully skipped!");
                 // Skip override
                 return;
