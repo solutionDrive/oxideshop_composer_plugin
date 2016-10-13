@@ -39,6 +39,9 @@ abstract class AbstractInstaller
 
     /** Used to install third party integration assets. */
     const EXTRA_PARAMETER_KEY_ASSETS = 'assets-directory';
+    
+    /** Used to install third party integration views. */
+    const EXTRA_PARAMETER_KEY_VIEWS = 'views-directory';
 
     /** Used to decide what the shop source directory is. */
     const EXTRA_PARAMETER_SOURCE_PATH = 'source-path';
