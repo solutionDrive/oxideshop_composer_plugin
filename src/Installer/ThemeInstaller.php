@@ -52,14 +52,6 @@ class ThemeInstaller extends AbstractInstaller
         $package = $this->getPackage();
     
         $this->getIO()->write("Installing {$package->getPrettyName()} package");
-        
-        if ($this->isInstalled()) {
-            if ($this->getIO()->ask("<info>Override existing Theme ({$package->getPrettyName()})? [y, n (default: y)]</info>", ' ?') == 'n') {
-                $this->getIO()->write("- Overriding of package {$package->getPrettyName()} was successfully skipped!");
-                // Skip override
-                return;
-            }
-        }
             
         // Install Views
         $this->getIO()->write(" - Installing views of {$package->getPrettyName()}");
@@ -77,6 +69,8 @@ class ThemeInstaller extends AbstractInstaller
      */
     public function update($packagePath)
     {
+        // Force install to override theme data
+        $this->install($packagePath);
     }
 
     /**
@@ -103,8 +97,8 @@ class ThemeInstaller extends AbstractInstaller
         $viewsDirectory = $this->formViewsDirectoryName();
         $source = $packagePath . '/' . $viewsDirectory;
     
-        $fileSystem = $this->getFileSystem();
         if (file_exists($source)) {
+            $fileSystem = $this->getFileSystem();
             $fileSystem->mirror($source, $this->formThemeTargetPath(), $iterator, ['override' => true]);
         }
     }
@@ -120,8 +114,8 @@ class ThemeInstaller extends AbstractInstaller
         $assetsDirectory = $this->formAssetsDirectoryName();
         $source = $packagePath . '/' . $assetsDirectory;
 
-        $fileSystem = $this->getFileSystem();
         if (file_exists($source)) {
+            $fileSystem = $this->getFileSystem();
             $fileSystem->mirror($source, $target, null, ['override' => true]);
         }
     }
