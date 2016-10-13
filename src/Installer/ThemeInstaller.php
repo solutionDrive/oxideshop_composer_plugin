@@ -33,6 +33,8 @@ class ThemeInstaller extends AbstractInstaller
     const PATH_TO_THEMES = "application/views";
 
     /**
+     * Checks if theme already installed
+     *
      * @return bool
      */
     public function isInstalled()
@@ -48,13 +50,23 @@ class ThemeInstaller extends AbstractInstaller
     public function install($packagePath)
     {
         $package = $this->getPackage();
+    
+        $this->getIO()->write("Installing {$package->getPrettyName()} package");
         
-        $this->getIO()->write("Installing {$package->getName()} package");
+        if ($this->isInstalled()) {
+            if ($this->getIO()->ask("<info>Override existing Theme ({$package->getPrettyName()})? [y, n]</info>", ' ?') == 'n') {
+                $this->getIO()->write("- Overriding of package {$package->getPrettyName()} was successfully skipped!");
+                // Skip override
+                return;
+            }
+        }
+            
+        // Install Views
+        $this->getIO()->write(" - Installing views of {$package->getPrettyName()}");
+        $this->installViews($packagePath);
 
-        $iterator = $this->getDirectoriesToSkipIteratorBuilder()
-            ->build($packagePath, [$this->formAssetsDirectoryName()]);
-        $fileSystem = $this->getFileSystem();
-        $fileSystem->mirror($packagePath, $this->formThemeTargetPath(), $iterator);
+        // Install Assets
+        $this->getIO()->write(" - Installing assets of {$package->getPrettyName()}");
         $this->installAssets($packagePath);
     }
 
@@ -76,7 +88,27 @@ class ThemeInstaller extends AbstractInstaller
         $themeDirectoryName = $this->formThemeDirectoryName($package);
         return "{$this->getRootDirectory()}/" . static::PATH_TO_THEMES . "/$themeDirectoryName";
     }
-
+    
+    /**
+     * @param $packagePath
+     */
+    protected function installViews($packagePath)
+    {
+        $iterator = $this->getDirectoriesToSkipIteratorBuilder()->build(
+            $packagePath, [
+                $this->formAssetsDirectoryName()
+            ]
+        );
+    
+        $viewsDirectory = $this->formViewsDirectoryName();
+        $source = $packagePath . '/' . $viewsDirectory;
+    
+        $fileSystem = $this->getFileSystem();
+        if (file_exists($source)) {
+            $fileSystem->mirror($source, $this->formThemeTargetPath(), $iterator, ['override' => true]);
+        }
+    }
+    
     /**
      * @param $packagePath
      */
@@ -90,7 +122,7 @@ class ThemeInstaller extends AbstractInstaller
 
         $fileSystem = $this->getFileSystem();
         if (file_exists($source)) {
-            $fileSystem->mirror($source, $target);
+            $fileSystem->mirror($source, $target, null, ['override' => true]);
         }
     }
     

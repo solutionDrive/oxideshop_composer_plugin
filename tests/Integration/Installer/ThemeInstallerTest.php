@@ -150,7 +150,7 @@ class ThemeInstallerTest extends \PHPUnit_Framework_TestCase
     {
         $structure = [
             'vendor/' . static::THEME_NAME_IN_COMPOSER => [
-                'theme.php' => '<?php',
+                'views/theme.php' => '<?php',
                 'out/style.css' => '.class {}',
                 'custom_directory_name/custom_style.css' => '.class {}',
             ]
