@@ -25,12 +25,40 @@ Executing tests
 Run all tests (only dev):
  - $: bin/phpunit tests
 
+Extra type for Composer
+------------------------
+
+Control your themes trough composer templates:
+
+target-directory = Theme name
+assets-directory = Repository assets path
+views-directory  = Repository views path
+source-path:     = Theme Basepath (default '/')
+
+"extra": {
+    "oxideshop": {
+        "target-directory": "mainTheme",
+        "assets-directory": "out/mainTheme",
+        "views-directory":  "application/views/mainTheme",
+        "source-path":      "/"
+    }
+}
+
 Changelog | Fork - solutionDrive GmbH
 -------------------------------------
 
 Description:
 We've forked this repository to work with themes over composer installer templates.
 
+1.0.0
 - Changed ThemeInstaller::PATH_TO_THEMES value to 'application/views' to match old structure
 - Changed PackagesInstaller::getShopSourcePath() to PackagesInstaller::getShopRootPath() to work directly with /application and /out - folders
     - Modified the tests for those changes
+
+1.0.1
+- Added views-directory to composer file
+- Added overriding ask case, to handle force updates
+
+1.0.2
+- Removed overriding case to force update every install/update
+- onUpdate - Theme will be installed again
