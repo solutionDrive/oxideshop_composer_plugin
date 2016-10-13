@@ -115,7 +115,22 @@ class ThemeInstaller extends AbstractInstaller
     }
     
     /**
-     * Builds the Path for specific asset folder,
+     * Forms the Path for specific views folder,
+     * specially from the composer.json of vender/theme
+     *
+     * @return string
+     */
+    protected function formViewsDirectoryName()
+    {
+        $assetsDirectory = $this->getExtraParameterValueByKey(static::EXTRA_PARAMETER_KEY_VIEWS);
+        if (is_null($assetsDirectory)) {
+            $assetsDirectory = 'views';
+        }
+        return $assetsDirectory;
+    }
+    
+    /**
+     * Forms the Path for specific asset folder,
      * specially from the composer.json of vender/theme
      *
      * @return string
