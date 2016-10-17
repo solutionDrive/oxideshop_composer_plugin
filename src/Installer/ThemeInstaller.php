@@ -51,14 +51,11 @@ class ThemeInstaller extends AbstractInstaller
     {
         $package = $this->getPackage();
     
-        $this->getIO()->write("Installing {$package->getPrettyName()} package");
+        $this->getIO()->write("Installing <info>{$package->getPrettyName()}</info> | Version <info>{$package->getFullPrettyVersion()}</info>");
             
         // Install Views
-        $this->getIO()->write(" - Installing views of {$package->getPrettyName()}");
         $this->installViews($packagePath);
-
         // Install Assets
-        $this->getIO()->write(" - Installing assets of {$package->getPrettyName()}");
         $this->installAssets($packagePath);
     }
 
