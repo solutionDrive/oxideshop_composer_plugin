@@ -23,39 +23,97 @@
 namespace OxidEsales\ComposerPlugin\Tests\Integration\Installer;
 
 use org\bovigo\vfs\vfsStream;
-use OxidEsales\ComposerPlugin\Installer\DirectoryRecursiveFilterIterator;
+
+use OxidEsales\ComposerPlugin\Installer\DirectoriesSkipIteratorBuilder;
 
 class DirectoryRecursiveFilterIteratorTest extends \PHPUnit_Framework_TestCase
 {
+    
+    /**
+     * @var null|DirectoriesSkipIteratorBuilder
+     */
+    private $_skipBuilder = null;
+    
+    public function setUp()
+    {
+        parent::setUp();
+        
+        $this->_skipBuilder = new DirectoriesSkipIteratorBuilder();
+    }
+    
     public function testFilteringDirectories()
     {
         $structure = [
             'Directory' => [
                 'NotSkipped' => [],
-                'Skipped' => [
+                'Skipped'    => [
                     'SkippedInside' => [],
-                    'Class.php' => 'content'
+                    'Class.php'     => 'content'
                 ],
                 'SkippedNot' => [],
             ]
         ];
+        
         vfsStream::setup('root', 777, ['projectRoot' => $structure]);
         $rootPath = vfsStream::url('root/projectRoot');
-
-        $directoryIterator = new \RecursiveDirectoryIterator($rootPath, \FilesystemIterator::SKIP_DOTS);
-        $directoryFilter = new DirectoryRecursiveFilterIterator($directoryIterator, [$rootPath.'/Directory/Skipped']);
-        $iterator = new \RecursiveIteratorIterator($directoryFilter, \RecursiveIteratorIterator::SELF_FIRST);
-
-        $result = [];
-        foreach ($iterator as $path) {
-            $result[] = $path->getPathName();
-        }
-
+        
+        $iterator = $this->_skipBuilder->build($rootPath, ['Directory/Skipped']);
+        $result = $this->_buildIteratorPaths($iterator);
+        
         $expected = [
             $rootPath.'/Directory',
             $rootPath.'/Directory/NotSkipped',
             $rootPath.'/Directory/SkippedNot'
         ];
+        
         $this->assertEquals($expected, $result);
+    }
+    
+    public function testForceFilteringDirectories()
+    {
+        $structure = [
+            'Directory' => [
+                'notForceSkipped' => [],
+                'isNormalSkipped' => [],
+                'isForceSkipped'  => [],
+                'isForceSkippedWithChildren' => [
+                    'isForceSkippedInside'    => [],
+                    'isForceSkippedClass.php' => 'content'
+                ]
+            ]
+        ];
+        
+        vfsStream::setup('root', 777, ['projectRoot' => $structure]);
+        $rootPath = vfsStream::url('root/projectRoot');
+    
+        $this->_skipBuilder->setForceSkipDirectories([
+            'Directory/isForceSkipped',
+            'Directory/isForceSkippedWithChildren'
+        ]);
+        
+        $iterator = $this->_skipBuilder->build($rootPath, ['Directory/isNormalSkipped']);
+        $result = $this->_buildIteratorPaths($iterator);
+        
+        $expected = [
+            $rootPath.'/Directory',
+            $rootPath.'/Directory/notForceSkipped'
+        ];
+        
+        $this->assertEquals($expected, $result);
+    }
+    
+    /**
+     * @param \RecursiveIteratorIterator $iterator
+     *
+     * @return array
+     */
+    protected function _buildIteratorPaths(\RecursiveIteratorIterator $iterator)
+    {
+        $result = [];
+        foreach ($iterator as $path) {
+            $result[] = $path->getPathName();
+        }
+        
+        return $result;
     }
 }
