@@ -96,7 +96,7 @@ class ThemeInstaller extends AbstractInstaller
     
         if (file_exists($source)) {
             $fileSystem = $this->getFileSystem();
-            $fileSystem->mirror($source, $this->formThemeTargetPath(), $iterator, ['override' => true]);
+            $fileSystem->mirror($source, $this->formThemeTargetPath(), $iterator);
         }
     }
     
@@ -113,7 +113,7 @@ class ThemeInstaller extends AbstractInstaller
 
         if (file_exists($source)) {
             $fileSystem = $this->getFileSystem();
-            $fileSystem->mirror($source, $target, null, ['override' => true]);
+            $fileSystem->mirror($source, $target, null);
         }
     }
     
