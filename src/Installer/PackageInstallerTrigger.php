@@ -108,6 +108,22 @@ class PackageInstallerTrigger extends LibraryInstaller
     }
 
     /**
+     * Get the path of the root directory
+     *
+     * @return string
+     */
+    public function getShopRootPath()
+    {
+        $shopRoot = getcwd();
+
+        if (isset($this->settings[AbstractPackageInstaller::EXTRA_PARAMETER_SOURCE_PATH])) {
+            $shopRoot = $this->settings[AbstractPackageInstaller::EXTRA_PARAMETER_SOURCE_PATH];
+        }
+
+        return $shopRoot;
+    }
+
+    /**
      * Creates package installer.
      *
      * @param PackageInterface $package
@@ -115,6 +131,6 @@ class PackageInstallerTrigger extends LibraryInstaller
      */
     protected function createInstaller(PackageInterface $package)
     {
-        return new $this->installers[$package->getType()]($this->io, $this->getShopSourcePath(), $package);
+        return new $this->installers[$package->getType()]($this->io, $this->getShopRootPath(), $package);
     }
 }
