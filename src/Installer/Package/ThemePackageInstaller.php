@@ -32,7 +32,7 @@ use Composer\Package\PackageInterface;
 class ThemePackageInstaller extends AbstractPackageInstaller
 {
     const METADATA_FILE_NAME = 'theme.php';
-    const PATH_TO_THEMES = "Application/views";
+    const PATH_TO_THEMES = "application/views";
 
     /**
      * @return bool
