@@ -49,7 +49,9 @@ class ThemePackageInstaller extends AbstractPackageInstaller
      */
     public function install($packagePath)
     {
-        $this->getIO()->write("Installing {$this->getPackage()->getName()} package");
+        $package = $this->getPackage();
+
+        $this->getIO()->write("Installing <info>{$package->getPrettyName()}</info> | <info>{$package->getPrettyVersion()}</info> package");
         $this->copyPackage($packagePath);
     }
 
