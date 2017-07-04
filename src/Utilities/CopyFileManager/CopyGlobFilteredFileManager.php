@@ -140,7 +140,7 @@ class CopyGlobFilteredFileManager
             $globExpressionList
         );
 
-        $filesystem->mirror($sourcePath, $destinationPath, $filteredFileListIterator, ["override" => true]);
+        $filesystem->mirror($sourcePath, $destinationPath, $filteredFileListIterator, ["override" => true, "delete" => true]);
     }
 
     /**
@@ -157,7 +157,7 @@ class CopyGlobFilteredFileManager
         $relativeSourcePath = self::getRelativePathForSingleFile($sourcePathOfFile);
 
         if (!GlobMatcher::matchAny($relativeSourcePath, $globExpressionList)) {
-            $filesystem->copy($sourcePathOfFile, $destinationPath, ["override" => true]);
+            $filesystem->copy($sourcePathOfFile, $destinationPath, ["override" => true, "delete" => true]);
         }
     }
 }
